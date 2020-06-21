@@ -10,7 +10,7 @@
 - block:
     - name: "enable {{ module_name }} in boot loader.conf"
       lineinfile:
-        path: "{{ freebsd_boot_loader_conf }}"
+        path: "{{ boot_loader_conf }}"
         regexp: '^{{ module_name }}_load='
         line: '{{ module_name }}_load="YES"'
 
@@ -24,7 +24,7 @@
 - block:
     - name: "disable {{ module_name }} in boot loader.conf"
       lineinfile:
-        path: "{{ freebsd_boot_loader_conf }}"
+        path: "{{ boot_loader_conf }}"
         regexp: '^{{ module_name }}_load='
         state: absent
 
