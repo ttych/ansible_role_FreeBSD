@@ -1,0 +1,34 @@
+---
+
+- name: configure make on FreeBSD
+  block:
+    - name: check make.conf presence
+      stat:
+        path: "{{ make_conf }}"
+      register: t_freebsd_make_conf_stat
+
+    - name: touch make.conf
+      file:
+        path: "{{ make_conf }}"
+        owner: root
+        group: "{{ root_group }}"
+        mode: "0644"
+        state: touch
+      when: not t_freebsd_make_conf_stat.stat.exists
+
+    - name: deploy default make.conf entries
+      lineinfile:
+        path: "{{ make_conf }}"
+        regexp: "^{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop: "{{ make_conf_entries['default'] }}"
+
+    - name: deploy specific make.conf entries
+      lineinfile:
+        path: "{{ make_conf }}"
+        regexp: "^{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop: "{{ make_conf_entries[hosttype] }}"
+      when: hosttype is defined and hosttype in make_conf_entries
+
+  when: ansible_system == 'FreeBSD'

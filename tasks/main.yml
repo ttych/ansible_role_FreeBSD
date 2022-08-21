@@ -1,6 +1,6 @@
 ---
 
-- include: context.yml
+- include_tasks: context.yml
 
 - block:
     - include_tasks: freebsd_context.yml
@@ -14,6 +14,10 @@
     ###
 
     - include_tasks: fuse.yml
+
+    - include_tasks: make.yml
+
+    - include_tasks: packages.yml
 
     - include_tasks: temperature.yml
 

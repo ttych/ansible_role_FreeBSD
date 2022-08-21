@@ -4,9 +4,8 @@ root_group: wheel
 boot_loader_conf: /boot/loader.conf
 sysctl_conf: /etc/sysctl.conf
 
-### pkg
-pkg_conf_local: /usr/local/etc/pkg.conf
-pkg_conf_local_repos_dir: /usr/local/etc/pkg/repos
+### hosttype
+hosttype: none
 
 ### fuse
 want_fuse: yes
@@ -16,6 +15,110 @@ fuse_packages:
 fuse_sysctls:
   - { name: vfs.usermount, value: 1 }
 fuse_module_name: fusefs
+
+### make
+make_conf: /etc/make.conf
+make_conf_entries:
+  default:
+    - { regexp: "^MK_PROFILE=", line: "MK_PROFILE=no" }
+    # - { regexp: "^DEFAULT_VERSIONS\\+=ssl=openssl", line: "DEFAULT_VERSIONS+=ssl=openssl" }
+    - { regexp: "^DEFAULT_VERSIONS\\+=ssl=libressl", line: "DEFAULT_VERSIONS+=ssl=libressl" }
+  server:
+    - { regexp: "^.*=WAYLAND$", line: "OPTIONS_UNSET+=WAYLAND" }
+    - { regexp: "^.*=X11$", line: "OPTIONS_UNSET+=X11" }
+    - { regexp: "^.*=EXAMPLES$", line: "OPTIONS_UNSET+=EXAMPLES" }
+    - { regexp: "^.*=DEBUG$", line: "OPTIONS_UNSET+=DEBUG" }
+    - { regexp: "^.*=GUI$", line: "OPTIONS_UNSET+=GUI" }
+
+### pkg
+pkg_conf_local: /usr/local/etc/pkg.conf
+pkg_conf_local_repos_dir: /usr/local/etc/pkg/repos
+
+### packages
+packages:
+  common:
+    - apg
+    - arping
+    - aspell
+    - aspell-ispell
+    - en-aspell
+    - fr-aspell
+    - base64
+    - bash
+    - bash-completion
+    - ca_root_nss
+    - curl
+    - daemontools-encore
+    - dialog4ports
+    - dmidecode
+    - dvdbackup
+    - expect
+    - ffmpeg
+    - flac
+    - fusefs-sshfs
+    - gdisk
+    - git
+    - gmake
+    - gtar
+    - htop
+    - iat
+    - inotify-tools
+    - iperf
+    - iperf3
+    - knock
+    - ksh93
+    - latex2html
+    - lftp
+    - libressl
+    - logrotate
+    - lscpu
+    - makepasswd
+    - mercurial
+    - nmap
+    - password-store
+    - pftop
+    - portmaster
+    - python
+    - rar
+    - readline
+    - rsync
+    - ruby
+    - rubygem-irb
+    - screen
+    - setsid
+    - sqlite3
+    - sshpass
+    - streamripper
+    - sudo
+    - tmux
+    - unrar
+    - unzip
+    - wget
+    - whois
+    - x86info
+    - zip
+    - zfsnap2
+    - zfs-stats
+    - zsh
+    - 7-zip
+  server:
+    - emacs-nox
+    - vim
+  desktop:
+    - chromium
+    - emacs
+    - filezilla
+    - firefox
+    - gcompris-qt
+    - gimp
+    - gthumb
+    - mplayer
+    - putty
+    - rxvt-unicode
+    - vim
+    - xbindkeys
+    - xclip
+    - xterm
 
 ### src
 freebsd_svn_url: https://svn.freebsd.org
