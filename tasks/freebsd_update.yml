@@ -1,0 +1,65 @@
+---
+
+- block:
+    - name: Fetch Updates
+      shell: "freebsd-update --not-running-from-cron fetch"
+      register: freebsd_update_fetch
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Check for Updates
+      shell: "freebsd-update --not-running-from-cron updatesready"
+      register: freebsd_update_ready
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Install Updates
+      shell: "freebsd-update --not-running-from-cron install"
+      register: freebsd_update_install
+      when: freebsd_update_ready.rc != 2
+
+    - name: get freebsd kernel installed version
+      shell: "freebsd-version -k"
+      register: freebsd_kernel_installed_version
+      changed_when: no
+
+    - name: get freebsd kernel running version
+      shell: "freebsd-version -r"
+      register: freebsd_kernel_running_version
+      changed_when: no
+
+    - name: get freebsd userland installed version
+      shell: "freebsd-version -u"
+      register: freebsd_userland_installed_version
+      changed_when: no
+
+    - name: check version missmatch
+      block:
+        - fail:
+            msg: "REBOOT NEEDED: running({{freebsd_kernel_running_version.stdout}}) != installed({{freebsd_kernel_installed_version.stdout}})"
+          ignore_errors: yes
+
+        - name: wait for the previous error message to be read
+          pause:
+            seconds: 30
+
+      when:
+        - freebsd_kernel_installed_version.stdout is version(freebsd_kernel_running_version.stdout, '>')
+        - freebsd_kernel_installed_version.stdout is version(freebsd_userland_installed_version.stdout, '>')
+
+    - name: check END-OF-LIFE status
+      block:
+        - fail:
+            msg: "UPGRADE NEEDED: {{ ansible_distribution_release }} HAS PASSED ITS END-OF-LIFE DATE"
+          ignore_errors: yes
+
+        - name: wait for the previous error message to be read
+          pause:
+            seconds: 30
+
+      when:
+        - freebsd_update_fetch.stdout is search('HAS PASSED ITS END-OF-LIFE DATE')
+
+  when:
+    - ansible_system == 'FreeBSD'
+    - is_in_jail.stdout == '0'

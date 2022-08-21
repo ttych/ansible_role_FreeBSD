@@ -1,0 +1,22 @@
+---
+
+- block:
+    - name: deploy local pkg.conf
+      template:
+        src: "pkg/pkg.conf"
+        dest: "{{ pkg_conf_local }}"
+        mode: "0644"
+        owner: root
+        group: "{{ root_group }}"
+
+    - name: deploy local FreeBSD repository
+      template:
+        src: "pkg/repos/{{ item }}"
+        dest: "{{ pkg_conf_local_repos_dir }}/{{ item }}"
+        mode: "0644"
+        owner: root
+        group: "{{ root_group }}"
+      loop:
+        - FreeBSD.conf
+
+  when: ansible_system == 'FreeBSD'

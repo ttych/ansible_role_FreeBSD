@@ -1,12 +1,28 @@
 ---
+
+root_group: wheel
 boot_loader_conf: /boot/loader.conf
 sysctl_conf: /etc/sysctl.conf
 
+### pkg
+pkg_conf_local: /usr/local/etc/pkg.conf
+pkg_conf_local_repos_dir: /usr/local/etc/pkg/repos
+
 ### fuse
 want_fuse: yes
-
 fuse_packages:
+  - fuse-utils
   - fusefs-sshfs
-
 fuse_sysctls:
   - { name: vfs.usermount, value: 1 }
+fuse_module_name: fusefs
+
+### src
+freebsd_svn_url: https://svn.freebsd.org
+
+### temperature
+temperature_modules:
+  - cpu: AMD
+    module: amdtemp
+  - cpu: Intel
+    module: coretemp

@@ -1,19 +1,25 @@
 ---
-- name: get CPU model
-  command: sysctl hw.model
-  changed_when: false
-  register: t_cpu_model
 
 - block:
-    - include: kernel_module.yml module_name=amdtemp module_status=enable
+    - name: get CPU model
+      command: sysctl hw.model
+      changed_when: false
+      register: t_cpu_model
 
-    - include: kernel_module.yml module_name=coretemp module_status=disable
+    - name: disable unwanted temperature modules
+      include_tasks: kernel_module.yml
+      vars:
+        module_name: "{{ item.module }}"
+        module_status: disable
+      loop: "{{ temperature_modules }}"
+      when: t_cpu_model.stdout is not search(item.cpu)
 
-  when: t_cpu_model.stdout is search("AMD")
+    - name: enable expected temperature modules
+      include_tasks: kernel_module.yml
+      vars:
+        module_name: "{{ item.module }}"
+        module_status: enable
+      loop: "{{ temperature_modules }}"
+      when: t_cpu_model.stdout is search(item.cpu)
 
-- block:
-    - include: kernel_module.yml module_name=amdtemp module_status=disable
-
-    - include: kernel_module.yml module_name=coretemp module_status=enable
-
-  when: t_cpu_model.stdout is search("Intel")
+  when: ansible_system == 'FreeBSD'

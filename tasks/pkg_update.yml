@@ -1,0 +1,35 @@
+---
+
+- block:
+    # - name: Update packages cache
+    #   shell: "pkg update -q"
+    #   changed_when: false
+
+    - name: Update ports
+      shell: portsnap --interactive auto
+      changed_when: no
+
+    - name: Check for packages update
+      shell: "pkg upgrade -n"
+      changed_when: false
+      register: has_packages_updates
+      ignore_errors: yes
+
+    - name: Update packages
+      shell: "pkg upgrade -y"
+      when: has_packages_updates.stdout.find('Your packages are up to date.') == -1
+
+    - name: Clean packages cache
+      shell: "pkg clean -qy"
+      changed_when: false
+
+    - name: Check for jails
+      shell: "jls | grep -v JID | wc -l | tr -d ' '"
+      register: has_jails
+      changed_when: false
+
+    - name: Update base jail
+      command: 'ezjail-admin update -u'
+      when: has_jails.stdout != '0' and is_jail.stdout == '0'
+
+  when: ansible_system == 'FreeBSD'

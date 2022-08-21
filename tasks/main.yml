@@ -1,7 +1,20 @@
 ---
-- block:
-    - include: temperature.yml
 
-    - include: fuse.yml
+- include: context.yml
+
+- block:
+    - include_tasks: freebsd_context.yml
+
+    - include_tasks: freebsd_update.yml
+
+    - include_tasks: pkg_manager.yml
+
+    - include_tasks: pkg_update.yml
+
+    ###
+
+    - include_tasks: fuse.yml
+
+    - include_tasks: temperature.yml
 
   when: ansible_system == 'FreeBSD'

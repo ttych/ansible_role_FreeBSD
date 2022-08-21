@@ -1,0 +1,6 @@
+---
+
+- name: Check status of jailing
+  shell: "sysctl -n security.jail.jailed"
+  register: is_in_jail
+  changed_when: false
