@@ -1,0 +1,21 @@
+---
+
+- block:
+    - name: compute package list
+      set_fact:
+        sys_computed_developer_packages: "{{ \
+                 (sys_packages['developer']['common'] | d([])) \
+                 + (sys_packages['developer'][ansible_architecture] | d([]))
+              }}"
+
+    - name: update catalog
+      shell: "pkg update -q"
+      changed_when: false
+
+    - name: "pkg install developer packages"
+      pkgng:
+        name: "{{ sys_computed_developer_packages }}"
+        state: latest
+
+  when:
+    - want_developer | d(no)

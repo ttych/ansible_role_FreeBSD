@@ -2,25 +2,24 @@
 
 - block:
     - name: compute package list
-      set_fact:
-        sys_computed_packages: "{{ \
-                 (sys_packages['common'] | d([])) \
-                 + (sys_packages[ansible_architecture] | d([]))
-                 + (sys_packages[hosttype] | d([])) \
-                 + (sys_packages[ansible_distribution_major_version]['common'] | d([])) \
-                 + (sys_packages[ansible_distribution_major_version][hosttype] | d([])) \
-                 + (sys_packages[ansible_distribution_version]['common'] | d([])) \
-                 + (sys_packages[ansible_distribution_version][hosttype] | d([])) \
-                 + (sys_packages_extra | d([])) \
-              }}"
+  set_fact:
+    sys_computed_packages: "{{ \
+             (sys_packages['common'] | d([])) \
+             + (sys_packages[ansible_architecture] | d([])) \
+             + (sys_packages[ansible_distribution_major_version] | d([])) \
+             + (sys_packages[ansible_distribution_version] | d([])) \
+             + (sys_packages[hosttype]['common'] | d([])) \
+             + (sys_packages[hosttype][ansible_architecture] | d([])) \
+             + (sys_packages[hosttype][ansible_distribution_major_version] | d([])) \
+             + (sys_packages[hosttype][ansible_distribution_version] | d([])) \
+             + (sys_packages_extra | d([])) \
+          }}"
 
-    - name: update catalog
-      shell: "pkg update -q"
-      changed_when: false
+- name: update catalog
+  shell: "pkg update -q"
+  changed_when: false
 
-    - name: "pkg install (with {{ hosttype }} packages)"
-      pkgng:
-        name: "{{ sys_computed_packages }}"
-        state: latest
-
-  when: ansible_system == 'FreeBSD'
+- name: "pkg install sys packages"
+  pkgng:
+    name: "{{ sys_computed_packages }}"
+    state: latest

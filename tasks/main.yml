@@ -25,4 +25,6 @@
 
     - include_tasks: temperature.yml
 
+    - include_tasks: developer.yml
+
   when: ansible_system == 'FreeBSD'

@@ -1,6 +1,7 @@
 ---
 
 ### want
+want_developer: no
 
 ###
 root_group: wheel
@@ -126,27 +127,34 @@ sys_packages:
     - zsh
     - 7-zip
   server:
-    - emacs-nox
-    - vim
+    common:
+      - emacs-nox
+      - vim
   desktop:
-    - chromium
-    - emacs
-    - filezilla
-    - firefox
-    - gcompris-qt
-    - gimp
-    - gthumb
-    - mplayer
-    - putty
-    - rxvt-unicode
-    - vim
-    - xbindkeys
-    - xclip
-    - xterm
+    common:
+      - chromium
+      - emacs
+      - filezilla
+      - firefox
+      - gcompris-qt
+      - gimp
+      - gthumb
+      - mplayer
+      - putty
+      - rxvt-unicode
+      - vim
+      - xbindkeys
+      - xclip
+      - xterm
+  developer:
+    common: []
+    amd64: []
 sys_packages_extra: []
 
 ### src
 freebsd_svn_url: https://svn.freebsd.org
+freebsd_github_url: https://github.com/freebsd/
+freebsd_gitlab_url: https://gitlab.com/FreeBSD/
 
 ### temperature
 temperature_modules:
