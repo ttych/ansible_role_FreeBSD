@@ -3,13 +3,15 @@
 - block:
     - name: compute package list
       set_fact:
-        expected_packages: "{{ \
-                 (packages['common'] | d([])) \
-                 + (packages[hosttype] | d([])) \
-                 + (vars['packages_' + ansible_distribution_major_version]['common'] | d([])) \
-                 + (vars['packages_' + ansible_distribution_major_version][hosttype] | d([])) \
-                 + (vars['packages_' + ansible_distribution_version]['common'] | d([])) \
-                 + (vars['packages_' + ansible_distribution_version][hosttype] | d([])) \
+        sys_computed_packages: "{{ \
+                 (sys_packages['common'] | d([])) \
+                 + (sys_packages[ansible_architecture] | d([]))
+                 + (sys_packages[hosttype] | d([])) \
+                 + (sys_packages[ansible_distribution_major_version]['common'] | d([])) \
+                 + (sys_packages[ansible_distribution_major_version][hosttype] | d([])) \
+                 + (sys_packages[ansible_distribution_version]['common'] | d([])) \
+                 + (sys_packages[ansible_distribution_version][hosttype] | d([])) \
+                 + (sys_packages_extra | d([])) \
               }}"
 
     - name: update catalog
@@ -18,7 +20,7 @@
 
     - name: "pkg install (with {{ hosttype }} packages)"
       pkgng:
-        name: "{{ expected_packages }}"
+        name: "{{ sys_computed_packages }}"
         state: latest
 
   when: ansible_system == 'FreeBSD'

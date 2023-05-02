@@ -5,6 +5,8 @@
 - block:
     - include_tasks: freebsd_context.yml
 
+    - include_tasks: sys_directories.yml
+
     - include_tasks: freebsd_update.yml
 
     - include_tasks: pkg_manager.yml

@@ -1,11 +1,34 @@
 ---
 
+### want
+
+###
 root_group: wheel
+
+### sys files
 boot_loader_conf: /boot/loader.conf
 sysctl_conf: /etc/sysctl.conf
 
 ### hosttype
 hosttype: none
+
+### directories
+sys_directories:
+  - { dest: '/usr/local', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/bin', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/etc', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/include', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/lib', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/sbin', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/share', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  #
+  - { dest: '/usr/local/libdata', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/libexec', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/man', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+  - { dest: '/usr/local/etc/rc.d', mode: '0755', owner: 'root', group: "{{ root_group }}", state: 'directory' }
+sys_links: []
+sys_extra_directories: []
+sys_extra_links: []
 
 ### fuse
 want_fuse: yes
@@ -35,7 +58,7 @@ pkg_conf_local: /usr/local/etc/pkg.conf
 pkg_conf_local_repos_dir: /usr/local/etc/pkg/repos
 
 ### packages
-packages:
+sys_packages:
   common:
     - apg
     - arping
@@ -93,6 +116,7 @@ packages:
     - tmux
     - unrar
     - unzip
+    - vim
     - wget
     - whois
     - x86info
@@ -119,6 +143,7 @@ packages:
     - xbindkeys
     - xclip
     - xterm
+sys_packages_extra: []
 
 ### src
 freebsd_svn_url: https://svn.freebsd.org
