@@ -1,7 +1,6 @@
 ---
 
-- block:
-    - name: compute package list
+- name: compute package list
   set_fact:
     sys_computed_packages: "{{ \
              (sys_packages['common'] | d([])) \
