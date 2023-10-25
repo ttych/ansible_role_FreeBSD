@@ -147,7 +147,8 @@ sys_packages:
       - xclip
       - xterm
   developer:
-    common: []
+    common:
+      - autoconf
     amd64: []
 sys_packages_extra: []
 
