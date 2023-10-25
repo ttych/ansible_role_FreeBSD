@@ -149,6 +149,7 @@ sys_packages:
   developer:
     common:
       - autoconf
+      - llvm
     amd64: []
 sys_packages_extra: []
 
