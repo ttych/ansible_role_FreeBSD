@@ -94,6 +94,7 @@ sys_packages:
     - latex2html
     - lftp
     - libressl
+    - libyaml
     - logrotate
     - lscpu
     - makepasswd
