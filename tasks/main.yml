@@ -5,26 +5,28 @@
 - block:
     - include_tasks: freebsd_context.yml
 
-    - include_tasks: sys_directories.yml
+    # - include_tasks: sys_directories.yml
 
-    - include_tasks: freebsd_update.yml
+    # - include_tasks: freebsd_update.yml
 
-    - include_tasks: pkg_manager.yml
+    # - include_tasks: pkg_manager.yml
 
-    - include_tasks: pkg_update.yml
+    # - include_tasks: pkg_update.yml
+
+    - include_tasks: power.yml
 
     ###
 
-    - include_tasks: fuse.yml
+    # - include_tasks: fuse.yml
 
-    - include_tasks: make.yml
+    # - include_tasks: make.yml
 
-    - include_tasks: packages.yml
+    # - include_tasks: packages.yml
 
-    - include_tasks: ports.yml
+    # - include_tasks: ports.yml
 
-    - include_tasks: temperature.yml
+    # - include_tasks: temperature.yml
 
-    - include_tasks: developer.yml
+    # - include_tasks: developer.yml
 
   when: ansible_system == 'FreeBSD'

@@ -1,0 +1,69 @@
+---
+
+- name: configure power
+  block:
+
+    # powerd
+
+    - name: configure powerd service
+      lineinfile:
+        path: "{{ rc_conf }}"
+        regexp: '^powerd_enable='
+        line: "powerd_enable=\"{{ 'YES' if freebsd_power_service == 'powerd' else 'NO' }}\""
+
+    - name: configure powerd options
+      lineinfile:
+        path: "{{ rc_conf }}"
+        regexp: '^powerd_flags='
+        line: "powerd_flags=\"{{ freebsd_powerd_flags }}\""
+      register: t_freebsd_powerd_options
+
+    - name: start powerd service
+      service:
+        name: powerd
+        state: "{{ 'started' if freebsd_power_service == 'powerd' else 'stopped' }}"
+      register: t_freebsd_powerd_service
+
+    - name: restart powerd service
+      service:
+        name: powerd
+        state: restarted
+      when:
+        - freebsd_power_service == 'powerd'
+        - t_freebsd_powerd_options.changed
+        - not t_freebsd_powerd_service.changed
+
+    # powerdxx
+
+    - name: configure powerdxx options
+      lineinfile:
+        path: "{{ rc_conf }}"
+        regexp: '^powerdxx_enable='
+        line: "powerdxx_enable=\"{{ 'YES' if freebsd_power_service == 'powerdxx' else 'NO' }}\""
+      register: t_freebsd_powerdxx_options
+
+    - name: configure powerdxx options
+      lineinfile:
+        path: "{{ rc_conf }}"
+        regexp: '^powerdxx_flags='
+        line: "powerdxx_flags=\"{{ freebsd_powerdxx_flags }}\""
+      register: t_freebsd_powerdxx_options
+
+    - name: start powerdxx service
+      service:
+        name: powerdxx
+        state: "{{ 'started' if freebsd_power_service == 'powerdxx' else 'stopped' }}"
+      register: t_freebsd_powerdxx_service
+
+    - name: restart powerdxx service
+      service:
+        name: powerdxx
+        state: restarted
+      when:
+        - freebsd_power_service == 'powerdxx'
+        - t_freebsd_powerdxx_options.changed
+        - not t_freebsd_powerdxx_service.changed
+
+  when:
+    - freebsd_power_service is defined
+    - freebsd_power_service

@@ -9,6 +9,7 @@ root_group: wheel
 ### sys files
 boot_loader_conf: /boot/loader.conf
 sysctl_conf: /etc/sysctl.conf
+rc_conf: /etc/rc.conf
 
 ### hosttype
 hosttype: none
@@ -166,3 +167,9 @@ temperature_modules:
     module: amdtemp
   - cpu: Intel
     module: coretemp
+
+### power
+freebsd_power_service: powerdxx
+freebsd_power_target: hiadaptive
+freebsd_powerd_flags: "-a {{ freebsd_power_target }} -b {{ freebsd_power_target }} -n {{ freebsd_power_target }}"
+freebsd_powerdxx_flags: "-a {{ freebsd_power_target }} -b {{ freebsd_power_target }} -n {{ freebsd_power_target }}"
